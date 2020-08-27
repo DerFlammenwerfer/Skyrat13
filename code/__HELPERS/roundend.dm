@@ -174,13 +174,12 @@
 
 	to_chat(world, "<BR><BR><BR><span class='big bold'>The round has ended.</span>")
 	if(LAZYLEN(GLOB.round_end_notifiees))
-		send2irc("Notice", "[GLOB.round_end_notifiees.Join(", ")] the round has ended.")
+		world.TgsTargetedChatBroadcast("[GLOB.round_end_notifiees.Join(", ")] the round has ended.", FALSE)
 
 	for(var/I in round_end_events)
 		var/datum/callback/cb = I
 		cb.InvokeAsync()
 	LAZYCLEARLIST(round_end_events)
-	// SKYRAT EDIT: Credits
 	RollCredits()
 	for(var/client/C in GLOB.clients)
 		C.playtitlemusic(40)
@@ -232,6 +231,7 @@
 	for(var/antag_name in total_antagonists)
 		var/list/L = total_antagonists[antag_name]
 		log_game("[antag_name]s :[L.Join(", ")].")
+	set_observer_default_invisibility(0, "<span class='warning'>The round is over! You are now visible to the living.</span>")
 
 	CHECK_TICK
 	SSdbcore.SetRoundEnd()

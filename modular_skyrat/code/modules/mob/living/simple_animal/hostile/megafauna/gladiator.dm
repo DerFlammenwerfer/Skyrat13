@@ -49,6 +49,7 @@ They deal 35 brute (armor is considered).
 	var/stunned = FALSE
 	var/stunduration = 15
 	var/move_to_charge = 1.5
+	songs = list("3850" = sound(file = 'modular_skyrat/sound/ambience/gladiator.ogg', repeat = 0, wait = 0, volume = 70, channel = CHANNEL_JUKEBOX))
 	loot = list(/obj/structure/closet/crate/necropolis/gladiator)
 	crusher_loot = list(/obj/structure/closet/crate/necropolis/gladiator/crusher)
 	glorymessageshand = list("grabs the gladiator's arm, flips their zweihander with the other hand, and forcefully makes them chop off their own head with it!", "grabs the gladiator by their zweihander, and mark detonate them into a shower of gibs!", "rips out both of the gladiator's arms, then kicks their limp torso on the groundd and curbstomps their head in so hard it explodes!")
@@ -68,9 +69,10 @@ They deal 35 brute (armor is considered).
 
 /mob/living/simple_animal/hostile/megafauna/gladiator/Life()
 	. = ..()
-	for(var/mob/living/M in view(4, src))
-		if(!(M in introduced))
-			introduction(M)
+	if(!wander)
+		for(var/mob/living/M in view(4, src))
+			if(!(M in introduced) && (stat != DEAD))
+				introduction(M)
 
 /mob/living/simple_animal/hostile/megafauna/gladiator/apply_damage(damage, damagetype, def_zone, blocked, forced)
 	if(speen)
@@ -114,7 +116,6 @@ They deal 35 brute (armor is considered).
 		else if(Hspecies.id == "dunmer")
 			var/list/messages = list("I will finisssh what little of your race remainsss, starting with you!",\
 									"Lavaland belongsss to the lizzzards!",\
-									"No marine can save you now, dark elf!",\
 									"Thisss sacred land wasn't your property before, it won't be now!")
 			say(message = pick(messages))
 			introduced |= H
